@@ -1,0 +1,5 @@
+Please suggest modifications to the Order and/or OrderBook classes to make them better suited to support real-life, latency-sensitive trading operations
+
+- In a real application, Order events are likely to originate from one or more different threads. The OrderBook class should therefore be updated to make it thread-safe. This could be done by swapping the non-thread safe collections currently backing it (HashMap/TreeMap/TreeSet) with their thread-safe equivalents (ConcurrentHashMap/ConcurrentSkipListMap/ConcurrentSkipListSet). Additionally locking would be required for operations that modify multiple collections (eg order removal and size updating) to ensure they are updated consistently with each other. The Order class as provided is immutable making it suitable for use in a multi-threaded environment.
+
+- If the state of the order book is to be queried regularly to view the total size outstanding at each level, it may be more efficient to update a running total value as orders are added/removed for the size at a particular level than to compute the total every time it is read.
